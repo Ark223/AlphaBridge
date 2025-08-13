@@ -50,13 +50,13 @@ namespace AlphaBridge
         /// <param name="hand">The hand as an array of card indices.</param>
         /// <returns>A new array containing the mapped cards.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        List<Card> Assign(in byte[] hand)
+        private List<Card> Assign(in byte[] hand)
         {
             var cards = new List<Card>(hand.Length);
             for (int idx = 0; idx < hand.Length; idx++)
             {
                 // Assign the card based on index
-                cards[idx] = Game.Deck[hand[idx]];
+                cards.Add(Game.Deck[hand[idx]]);
             }
             return cards;
         }
@@ -114,11 +114,10 @@ namespace AlphaBridge
         /// </summary>
         private void UnplayTrick()
         {
-            Trick trick = this._trick;
-            Player player = trick.Leader;
-            for (int i = 0; i < trick.Count; i++)
+            Player player = this._trick.Leader;
+            for (int i = 0; i < this._trick.Count; i++)
             {
-                ref Card card = ref trick.Cards[i];
+                Card card = this._trick.Cards[i];
                 ulong bit = 1UL << card.Index();
 
                 // Restore card to player's hand
@@ -257,7 +256,7 @@ namespace AlphaBridge
         }
 
         /// <summary>
-        /// Generate a random complete deal consistent with the current game state.
+        /// Generates a random complete deal consistent with the current game state.
         /// </summary>
         /// <returns>Array of four player hands with assigned cards.</returns>
         internal List<Card>[] Generate()
