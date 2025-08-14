@@ -246,8 +246,8 @@ namespace AlphaBridge
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private byte[] FindLefts()
         {
-            return Enumerable.Range(0, 4).Select(id => (byte)(13 -
-                Utilities.PopCount(this._hands[id]))).ToArray();
+            return Array.ConvertAll(new int[] { 0, 1, 2, 3 }, seat =>
+                (byte)(13 - Utilities.PopCount(this._hands[seat])));
         }
 
         /// <summary>
