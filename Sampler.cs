@@ -47,7 +47,7 @@ namespace AlphaBridge
         /// Converts an array of card indices into a list of <see cref="Card"/> objects.
         /// </summary>
         /// <param name="hand">Hand as an array of card indices.</param>
-        /// <returns>A new array containing the mapped cards.</returns>
+        /// <returns>A new sequence containing the mapped cards.</returns>
         private List<Card> Assign(in byte[] hand)
         {
             var cards = new List<Card>(hand.Length);
@@ -132,7 +132,7 @@ namespace AlphaBridge
         /// <summary>
         /// Transforms the deal into PBN format, showing only unplayed cards for each player.
         /// </summary>
-        /// <param name="deal">Array of four player hands representing the full deal.</param>
+        /// <param name="deal">List of four player hands representing the full deal.</param>
         /// <returns>A PBN string representing all hands after removing played cards.</returns>
         private string Transform(in List<Card>[] deal)
         {
@@ -197,10 +197,10 @@ namespace AlphaBridge
         }
 
         /// <summary>
-        /// Sets the array of legal moves available in the current context.
+        /// Sets the sequence of legal moves available in the current context.
         /// </summary>
         /// <param name="moves">
-        /// Array of <see cref="Card"/> objects representing all legal plays.
+        /// List of <see cref="Card"/> objects representing all legal plays.
         /// </param>
         internal void SetLegalMoves(List<Card> moves)
         {
@@ -210,7 +210,7 @@ namespace AlphaBridge
         /// <summary>
         /// Returns true if the specified deal meets all hand constraints.
         /// </summary>
-        /// <param name="deal">Array of four player hands representing the full deal.</param>
+        /// <param name="deal">List of four player hands representing the full deal.</param>
         /// <returns>True if the deal satisfies all constraints; otherwise, false.</returns>
         internal bool Filter(in List<Card>[] deal)
         {
@@ -256,7 +256,7 @@ namespace AlphaBridge
         /// <summary>
         /// Generates a random complete deal consistent with the current game state.
         /// </summary>
-        /// <returns>An array of four player hands with assigned cards.</returns>
+        /// <returns>A list of four player hands with assigned cards.</returns>
         internal List<Card>[] Generate()
         {
             // Copy remaining cards and shuffle
@@ -301,7 +301,7 @@ namespace AlphaBridge
         /// <summary>
         /// For each legal move, computes a double-dummy trick count for the given deal.
         /// </summary>
-        /// <param name="deal">Array of four player hands representing the full deal.</param>
+        /// <param name="deal">List of four player hands representing the full deal.</param>
         /// <returns>Mapping from legal moves to tricks available after each play.</returns>
         internal Dictionary<Card, int> Solve(in List<Card>[] deal)
         {
