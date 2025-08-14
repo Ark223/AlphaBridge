@@ -4,29 +4,29 @@ using static AlphaBridge.Extensions;
 namespace AlphaBridge
 {
     /// <summary>
-    /// Represents the state of the current trick.
+    /// Represents a state of the current trick.
     /// </summary>
     internal struct Trick
     {
         /// <summary>
-        /// The cards currently played to the trick.
+        /// Cards currently played to the trick.
         /// </summary>
         public Card[] Cards;
 
         /// <summary>
-        /// The player who led (started) this trick.
+        /// Player who led (started) this trick.
         /// </summary>
         public Player Leader;
 
         /// <summary>
-        /// The number of cards played so far (0 to 4).
+        /// Number of cards played so far (0 to 4).
         /// </summary>
         public byte Count;
 
         /// <summary>
         /// Initializes a new trick with the specified leader.
         /// </summary>
-        /// <param name="leader">The player who leads the trick.</param>
+        /// <param name="leader">Player who leads the trick.</param>
         public Trick(Player leader)
         {
             this.Cards = new Card[4];

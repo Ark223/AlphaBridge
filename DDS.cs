@@ -12,7 +12,7 @@ namespace AlphaBridge
         private IntPtr instance = IntPtr.Zero;
 
         /// <summary>
-        /// Static P/Invoke definitions for the native solver DLL.
+        /// Provides access to the native double-dummy solver functions.
         /// </summary>
         private static class Solver
         {
@@ -26,7 +26,7 @@ namespace AlphaBridge
             internal static extern void bcalcDDS_delete(IntPtr solver);
 
             [DllImport("libcalcdds", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-            internal static extern void bcalcDDS_exec(IntPtr solver, string commands);
+            internal static extern void bcalcDDS_exec(IntPtr solver, string command);
 
             [DllImport("libcalcdds", CallingConvention = CallingConvention.Cdecl)]
             internal static extern int bcalcDDS_getTricksToTake(IntPtr solver);
@@ -48,28 +48,28 @@ namespace AlphaBridge
         /// Creates a new double-dummy solver for the specified deal.
         /// </summary>
         /// <param name="format">Format string (e.g., "PBN").</param>
-        /// <param name="hands">String representation of the hands.</param>
+        /// <param name="hands">String representation of hands.</param>
         /// <param name="strain">Contract strain (suit or NT).</param>
-        /// <param name="leader">Player to lead.</param>
+        /// <param name="leader">Player to lead a card.</param>
         internal DDS(string format, string hands, Suit strain, Player leader)
         {
             this.instance = Solver.bcalcDDS_new(format, hands, (int)strain, (int)leader);
         }
 
         /// <summary>
-        /// Sends commands to the solver for execution.
+        /// Sends a command to the solver for execution.
         /// </summary>
-        /// <param name="commands">Command string for the native solver.</param>
-        internal void Execute(string commands)
+        /// <param name="command">Command string.</param>
+        internal void Execute(string command)
         {
-            Solver.bcalcDDS_exec(this.instance, commands);
+            Solver.bcalcDDS_exec(this.instance, command);
         }
 
         /// <summary>
         /// Gets the maximum tricks to take after playing a specific card.
         /// </summary>
         /// <param name="card">Card played as a string (e.g., "AS").</param>
-        /// <returns>Number of tricks to take from that state.</returns>
+        /// <returns>Number of tricks to take from the provided state.</returns>
         internal int Tricks(string card)
         {
             return Solver.bcalcDDS_getTricksToTakeEx(this.instance, -1, card);

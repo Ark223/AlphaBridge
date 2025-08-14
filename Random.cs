@@ -40,7 +40,7 @@ namespace AlphaBridge
         /// <summary>
         /// Returns a random integer in the [0, Max) range.
         /// </summary>
-        /// <returns>Random value in the specified range.</returns>
+        /// <returns>A random value in specified range.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static int Next(int max)
         {
@@ -52,7 +52,7 @@ namespace AlphaBridge
         /// </summary>
         /// <param name="min">Lower bound (inclusive).</param>
         /// <param name="max">Upper bound (exclusive).</param>
-        /// <returns>Random value in the specified range.</returns>
+        /// <returns>A random value in specified range.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static int Next(int min, int max)
         {

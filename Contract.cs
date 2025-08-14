@@ -3,11 +3,11 @@
 namespace AlphaBridge
 {
     /// <summary>
-    /// Represents a bridge contract (level and strain/suit).
+    /// Represents a bridge contract (level and strain).
     /// </summary>
     public sealed class Contract
     {
-        internal int  Level  { get; }
+        internal int Level { get; }
         internal Suit Strain { get; }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace AlphaBridge
         /// <summary>
         /// Parses a string (e.g., "4S", "3NT") into a <see cref="Contract"/> object.
         /// </summary>
-        /// <param name="contract">String contract (first char is level, second is strain).</param>
+        /// <param name="contract">String contract (first character is level, second is strain).</param>
         /// <returns>A parsed <see cref="Contract"/>, or <see cref="None"/> if input is empty.</returns>
         public static Contract Parse(string contract)
         {
@@ -56,7 +56,7 @@ namespace AlphaBridge
         /// <summary>
         /// Attempts to parse a string (e.g., "4S", "3NT") into a <see cref="Contract"/> object.
         /// </summary>
-        /// <param name="contract">String contract (first char is level, second is strain).</param>
+        /// <param name="contract">String contract (first character is level, second is strain).</param>
         /// <param name="result">Parsed <see cref="Contract"/>, or <see cref="None"/> if failed.</param>
         /// <returns>True if parsing the contract succeeded; otherwise, false.</returns>
         public static bool TryParse(string contract, out Contract result)
@@ -88,7 +88,9 @@ namespace AlphaBridge
         /// <summary>
         /// Returns a string representation of the contract (e.g., "4S", "3NT").
         /// </summary>
-        /// <returns>String representation of the contract.</returns>
+        /// <returns>
+        /// A string showing the contract level and strain, or "-" if passed out.
+        /// </returns>
         public override string ToString()
         {
             if (this.Level == 0) return "-";

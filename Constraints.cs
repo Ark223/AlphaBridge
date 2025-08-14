@@ -69,7 +69,7 @@ namespace AlphaBridge
         /// Updates a range property and marks this instance as edited.
         /// </summary>
         /// <param name="range">Reference to the backing range to update.</param>
-        /// <param name="value">The new value to assign to the range.</param>
+        /// <param name="value">A new value to assign to the range.</param>
         private void Set(ref Range range, Range value)
         {
             range = value;

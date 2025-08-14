@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using static AlphaBridge.Extensions;
 
 namespace AlphaBridge
@@ -47,9 +46,8 @@ namespace AlphaBridge
         /// <summary>
         /// Converts an array of card indices into a list of <see cref="Card"/> objects.
         /// </summary>
-        /// <param name="hand">The hand as an array of card indices.</param>
+        /// <param name="hand">Hand as an array of card indices.</param>
         /// <returns>A new array containing the mapped cards.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private List<Card> Assign(in byte[] hand)
         {
             var cards = new List<Card>(hand.Length);
@@ -65,7 +63,7 @@ namespace AlphaBridge
         /// Converts a 52-bit bitmask into an array of card indexes (0–51).
         /// </summary>
         /// <param name="bitmask">Bitmask representing cards to be converted.</param>
-        /// <returns>Array of card indexes extracted from the given bitmask.</returns>
+        /// <returns>Array of card indexes extracted from the input bitmask.</returns>
         private byte[] Convert(ulong bitmask)
         {
             byte size = Utilities.PopCount(bitmask);
@@ -134,7 +132,7 @@ namespace AlphaBridge
         /// <summary>
         /// Transforms the deal into PBN format, showing only unplayed cards for each player.
         /// </summary>
-        /// <param name="deal">An array of four player hands representing the full deal.</param>
+        /// <param name="deal">Array of four player hands representing the full deal.</param>
         /// <returns>A PBN string representing all hands after removing played cards.</returns>
         private string Transform(in List<Card>[] deal)
         {
@@ -183,7 +181,7 @@ namespace AlphaBridge
         /// <summary>
         /// Assigns a new contract, modifying the play conditions.
         /// </summary>
-        /// <param name="contract">The contract to assign.</param>
+        /// <param name="contract">Contract to assign.</param>
         internal void SetContract(Contract contract)
         {
             this._contract = contract;
@@ -212,7 +210,7 @@ namespace AlphaBridge
         /// <summary>
         /// Returns true if the specified deal meets all hand constraints.
         /// </summary>
-        /// <param name="deal">An array of four player hands representing the full deal.</param>
+        /// <param name="deal">Array of four player hands representing the full deal.</param>
         /// <returns>True if the deal satisfies all constraints; otherwise, false.</returns>
         internal bool Filter(in List<Card>[] deal)
         {
@@ -258,7 +256,7 @@ namespace AlphaBridge
         /// <summary>
         /// Generates a random complete deal consistent with the current game state.
         /// </summary>
-        /// <returns>Array of four player hands with assigned cards.</returns>
+        /// <returns>An array of four player hands with assigned cards.</returns>
         internal List<Card>[] Generate()
         {
             // Copy remaining cards and shuffle
@@ -301,9 +299,9 @@ namespace AlphaBridge
         }
 
         /// <summary>
-        /// For each legal move, computes the double-dummy trick count from the given deal.
+        /// For each legal move, computes a double-dummy trick count for the given deal.
         /// </summary>
-        /// <param name="deal">An array of four player hands representing the full deal.</param>
+        /// <param name="deal">Array of four player hands representing the full deal.</param>
         /// <returns>Mapping from legal moves to tricks available after each play.</returns>
         internal Dictionary<Card, int> Solve(in List<Card>[] deal)
         {

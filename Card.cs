@@ -10,7 +10,7 @@ namespace AlphaBridge
     /// </summary>
     public readonly struct Card : IEquatable<Card>, IComparable<Card>
     {
-        internal int  Rank { get; }
+        internal int Rank { get; }
         internal Suit Suit { get; }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace AlphaBridge
         };
 
         /// <summary>
-        /// Creates a new card with the given rank and suit.
+        /// Creates a new card with the input rank and suit.
         /// </summary>
         /// <param name="rank">Card rank (2..14).</param>
         /// <param name="suit">Card suit.</param>
@@ -70,7 +70,10 @@ namespace AlphaBridge
         /// Creates a <see cref="Card"/> from a zero-based index (0..51).
         /// </summary>
         /// <param name="index">Zero-based card index.</param>
-        /// <returns>A <see cref="Card"/> corresponding to the specified index.</returns>
+        /// <returns>
+        /// A <see cref="Card"/> corresponding to the specified index.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static Card Create(int index)
         {
             return new Card((index % 13) + 2, (Suit)(index / 13));
@@ -79,7 +82,7 @@ namespace AlphaBridge
         /// <summary>
         /// Gets the high card point (HCP) value for this card (A=4, K=3, Q=2, J=1, others=0).
         /// </summary>
-        /// <returns>The high card point value of this card.</returns>
+        /// <returns>High card point value of this card.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int Hcp()
         {
@@ -90,7 +93,7 @@ namespace AlphaBridge
         /// Gets the unique zero-based index (0..51) for this card, based on suit and rank.
         /// <br></br>Spades: 0–12, Hearts: 13–25, Diamonds: 26–38, Clubs: 39–51.
         /// </summary>
-        /// <returns>The zero-based index corresponding to this card.</returns>
+        /// <returns>Zero-based index corresponding to this card.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int Index()
         {
@@ -125,7 +128,7 @@ namespace AlphaBridge
         /// <summary>
         /// Returns a string representation of the card (e.g., "AS", "TH").
         /// </summary>
-        /// <returns>The rank character followed by the suit character.</returns>
+        /// <returns>A two-character string: rank followed by suit.</returns>
         public override string ToString()
         {
             char rank = RankToChar[this.Rank];

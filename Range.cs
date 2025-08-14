@@ -1,7 +1,7 @@
 ﻿namespace AlphaBridge
 {
     /// <summary>
-    /// Represents an integer interval [Min, Max] for game constraints.
+    /// Represents an interval [Min, Max] for bridge game constraints.
     /// </summary>
     public readonly struct Range
     {
@@ -20,9 +20,9 @@
         }
 
         /// <summary>
-        /// Returns a range [0, limit], representing "any value up to limit".
+        /// Returns a range representing "any value up to limit".
         /// </summary>
-        /// <param name="limit">The maximum allowed value.</param>
+        /// <param name="limit">Maximum allowed value.</param>
         /// <returns>A new range from 0 to limit.</returns>
         internal static Range Any(int limit = 40)
         {
@@ -32,8 +32,10 @@
         /// <summary>
         /// Determines if the range contains the specified value.
         /// </summary>
-        /// <param name="value">The value to test.</param>
-        /// <returns>True if value is in [Min, Max]; otherwise, false.</returns>
+        /// <param name="value">Value to test.</param>
+        /// <returns>
+        /// True if value is in [Min, Max]; otherwise, false.
+        /// </returns>
         internal bool Contains(int value)
         {
             return value >= this.Min && value <= this.Max;
@@ -42,7 +44,9 @@
         /// <summary>
         /// Returns a string representation of the range (e.g., "[0,13]").
         /// </summary>
-        /// <returns>A string displaying the minimum and maximum values.</returns>
+        /// <returns>
+        /// A string displaying the minimum and maximum values.
+        /// </returns>
         public override string ToString()
         {
             return $"[{this.Min},{this.Max}]";

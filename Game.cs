@@ -42,7 +42,7 @@ namespace AlphaBridge
         /// Attempts to play a move specified as a string (e.g., "AS" for Ace of Spades).
         /// </summary>
         /// <param name="move">String representation of the card played.</param>
-        /// <param name="check">If true, checks move legality; if false, does not check.</param>
+        /// <param name="check">If true, validates the move before playing.</param>
         /// <returns>True if move is legal and accepted; otherwise, false.</returns>
         bool Play(string move, bool check = true);
 
@@ -50,7 +50,7 @@ namespace AlphaBridge
         /// Attempts to play a move specified as a <see cref="Card"/> object.
         /// </summary>
         /// <param name="card">The card played.</param>
-        /// <param name="check">If true, checks move legality; if false, does not check.</param>
+        /// <param name="check">If true, validates the move before playing.</param>
         /// <returns>True if move is legal and accepted; otherwise, false.</returns>
         bool Play(in Card card, bool check = true);
 
@@ -72,7 +72,7 @@ namespace AlphaBridge
         /// <summary>
         /// Checks whether a move specified as a <see cref="Card"/> is legal in the current game state.
         /// </summary>
-        /// <param name="card">The card to be played.</param>
+        /// <param name="card">Card to be played.</param>
         /// <returns>True if the move is legal; otherwise, false.</returns>
         bool IsLegal(in Card card);
 
@@ -204,7 +204,7 @@ namespace AlphaBridge
         /// <summary>
         /// Returns a bitmask covering all 13 cards of specified suit within a deck.
         /// </summary>
-        /// <param name="suit">The suit for which to get the mask.</param>
+        /// <param name="suit">Suit for which to get the mask.</param>
         /// <returns>
         /// A 52-bit mask with 13 bits corresponding to the specified suit.
         /// </returns>
@@ -228,7 +228,7 @@ namespace AlphaBridge
         /// <summary>
         /// Determines the suit led for the current trick.
         /// </summary>
-        /// <param name="card">The card being played.</param>
+        /// <param name="card">Card being played.</param>
         /// <returns>The suit led in this trick.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private Suit FirstLead(in Card card)
@@ -253,8 +253,8 @@ namespace AlphaBridge
         /// <summary>
         /// Returns the trick-taking priority of a card: trump (2), led suit (1), or other (0).
         /// </summary>
-        /// <param name="card">The card to evaluate.</param>
-        /// <param name="trump">The trump suit for this contract.</param>
+        /// <param name="card">Card to evaluate.</param>
+        /// <param name="trump">Trump suit for this contract.</param>
         /// <param name="lead">The suit led for this trick.</param>
         /// <returns>2 for trump, 1 for led suit, 0 otherwise.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -265,7 +265,7 @@ namespace AlphaBridge
         }
 
         /// <summary>
-        /// Determines the winner of the current trick and updates a game state.
+        /// Determines the winner of a current trick and updates the game state.
         /// </summary>
         private void FinishTrick()
         {
@@ -331,7 +331,7 @@ namespace AlphaBridge
         /// Attempts to play a move specified as a string (e.g., "AS" for Ace of Spades).
         /// </summary>
         /// <param name="move">String representation of the card played.</param>
-        /// <param name="check">If true, checks move legality; if false, does not check.</param>
+        /// <param name="check">If true, validates the move before playing.</param>
         /// <returns>True if move is legal and accepted; otherwise, false.</returns>
         public bool Play(string move, bool check = true)
         {
@@ -343,7 +343,7 @@ namespace AlphaBridge
         /// Attempts to play a move specified as a <see cref="Card"/> object.
         /// </summary>
         /// <param name="card">The card played.</param>
-        /// <param name="check">If true, checks move legality; if false, does not check.</param>
+        /// <param name="check">If true, validates the move before playing.</param>
         /// <returns>True if move is legal and accepted; otherwise, false.</returns>
         public bool Play(in Card card, bool check = true)
         {
@@ -462,7 +462,7 @@ namespace AlphaBridge
         /// <summary>
         /// Checks whether a move specified as a <see cref="Card"/> is legal in the current game state.
         /// </summary>
-        /// <param name="card">The card to be played.</param>
+        /// <param name="card">Card to be played.</param>
         /// <returns>True if the move is legal; otherwise, false.</returns>
         public bool IsLegal(in Card card)
         {
@@ -608,7 +608,7 @@ namespace AlphaBridge
         /// Creates a <see cref="Sampler"/> instance initialized with the current game state.
         /// </summary>
         /// <returns>
-        /// A new <see cref="Sampler"/> object that can generate random deals consistent with this game.
+        /// A new <see cref="Sampler"/> object that can generate and evaluate random deals.
         /// </returns>
         internal Sampler Sampling()
         {
@@ -616,10 +616,10 @@ namespace AlphaBridge
                 new Sampler(this._hands, this._plays,
                 this._hidden, this._voids, this._trick);
 
+            // Apply constraints, contract, and moves
             sampler.SetConstraints(this._constraints);
             sampler.SetContract(this._contract);
             sampler.SetLegalMoves(this.GetMoves());
-
             return sampler;
         }
 

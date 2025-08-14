@@ -1,7 +1,7 @@
 ﻿namespace AlphaBridge
 {
     /// <summary>
-    /// Utility extension methods and enums for bridge.
+    /// Utility extension methods and enums for bridge game.
     /// </summary>
     public static class Extensions
     {
@@ -29,7 +29,7 @@
         }
 
         /// <summary>
-        /// Returns the next player in clockwise order (N → E → S → W → N).
+        /// Returns the next player in clockwise order.
         /// </summary>
         /// <param name="player">Current player.</param>
         /// <returns>Next player.</returns>
@@ -39,7 +39,7 @@
         }
 
         /// <summary>
-        /// Returns the previous player in counter-clockwise order (N ← W ← S ← E ← N).
+        /// Returns the previous player in counter-clockwise order.
         /// </summary>
         /// <param name="player">Current player.</param>
         /// <returns>Previous player.</returns>
@@ -51,9 +51,11 @@
         /// <summary>
         /// Returns the player seated a given number of seats after the current player.
         /// </summary>
-        /// <param name="player">The starting player.</param>
-        /// <param name="steps">Number of seats to advance (0..3).</param>
-        /// <returns>The player after advancing the specified number of seats.</returns>
+        /// <param name="player">Starting player.</param>
+        /// <param name="steps">Number of seats to advance.</param>
+        /// <returns>
+        /// A player after advancing the specified number of seats.
+        /// </returns>
         public static Player Advance(this Player player, int steps)
         {
             return (Player)(((int)player + steps) % 4);
