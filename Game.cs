@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using static AlphaBridge.Extensions;
 
 namespace AlphaBridge
@@ -18,9 +20,9 @@ namespace AlphaBridge
         public string Deal { get; set; } = string.Empty;
 
         /// <summary>
-        /// The player who is dealer (North, East, South, or West).
+        /// The leading player (North, East, South, or West).
         /// </summary>
-        public Player Dealer { get; set; } = Player.North;
+        public Player Leader { get; set; } = Player.North;
 
         /// <summary>
         /// The contract to be played (e.g., 3NT, 4H, ...).
@@ -246,7 +248,7 @@ namespace AlphaBridge
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private byte[] FindLefts()
         {
-            return Array.ConvertAll(new int[] { 0, 1, 2, 3 }, seat =>
+            return Array.ConvertAll(new int[] {0, 1, 2, 3}, seat =>
                 (byte)(13 - Utilities.PopCount(this._hands[seat])));
         }
 
@@ -262,6 +264,38 @@ namespace AlphaBridge
         {
             return trump != Suit.NoTrump && card.Suit ==
                 trump ? 2 : card.Suit == lead ? 1 : 0;
+        }
+    }
+
+    public sealed partial class Game : IGame, IDisposable
+    {
+        /// <summary>
+        /// Marks the leader's hand as void in the given suit, then assigns all hidden
+        /// <br></br>cards of that suit to the only other hand that can still hold them.
+        /// </summary>
+        /// <param name="suit">Suit in which the leader is void.</param>
+        private void ApplyVoid(Suit suit)
+        {
+            // Mark the void
+            this.SetVoid(suit);
+
+            // Compute bitmask of hidden cards of that suit
+            ulong hidden = this._hidden & this.SuitMask(suit);
+            if (hidden == 0UL) return;
+
+            // Find the non-leading player with any unknown cards
+            var targets = Enumerable.Range(0, 4).Where<int>(seat =>
+                seat != (int)this._leader && this._lefts[seat] > 0);
+
+            // Only proceed if exactly one candidate remains
+            int target = targets.DefaultIfEmpty(-1).First();
+            if (target == -1 || targets.Count() > 1) return;
+
+            // Assign hidden cards to the target hand
+            byte count = Utilities.PopCount(hidden);
+            this._hands[target] |= hidden;
+            this._lefts[target] -= count;
+            this._hidden &= ~hidden;
         }
 
         /// <summary>
@@ -303,7 +337,7 @@ namespace AlphaBridge
         /// <param name="options">Game options, including deal and contract.</param>
         public Game(GameOptions options)
         {
-            this._leader = options.Dealer;
+            this._leader = options.Leader;
             this._contract = options.Contract;
             this._constraints = options.Constraints;
             this._hands = PBN.ParseDeal(options.Deal);
@@ -356,9 +390,6 @@ namespace AlphaBridge
             // Compute bitmask for played card
             ulong bit = 1UL << card.Index();
 
-            // Record a void if didn't follow the suit
-            if (card.Suit != lead) this.SetVoid(lead);
-
             // Save the current game state
             this._undo.Push(new History
             {
@@ -372,6 +403,9 @@ namespace AlphaBridge
                 Voids = this._voids
             });
             this._redo.Clear();
+
+            // Record a void if didn't follow the suit
+            if (card.Suit != lead) this.ApplyVoid(lead);
 
             // Remove hidden card and consume an unknown slot
             if ((this._hands[(int)this._leader] & bit) == 0)
@@ -596,6 +630,7 @@ namespace AlphaBridge
             // Deep copy trick state and hands
             copy._trick = this._trick.Copy();
             copy._hands = this._hands.ToArray();
+            copy._plays = this._plays.ToArray();
             copy._lefts = this._lefts.ToArray();
 
             // Clone undo and redo history stacks
